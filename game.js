@@ -25,8 +25,8 @@ let player;
 
 function preload() {
   // PARAMETERS: (key, filePath, OPTIONAL -> configObject)
-  // width: 85 || height: 100
-  // this.load.spritesheet('tom', 'assets/tom-spritesheet.png', {frameWidth: 85, frameHeight: 130})
+  // width: 85 || height: 100     ||OLD CODE||
+  // this.load.spritesheet('tom', 'assets/tom-spritesheet.png', {frameWidth: 85, frameHeight: 130}) ||OLD CODE||
   this.load.atlas('tom', 'assets/player.png', 'assets/player.json')
   this.load.image('platform', 'assets/platform.png')
   this.load.image('platform-end', 'assets/platform-end.png')
@@ -53,7 +53,7 @@ function create() {
   **   key:           a Key Name on to the sprite being created
   **   frame:         the beginning of the sprite to display
   */
-  // const player = this.physics.add.sprite(100, 350, 'tom', 0)
+  // const player = this.physics.add.sprite(100, 350, 'tom', 0) ||OLD CODE||
   player = this.physics.add.sprite(100, 350, 'tom', 'run001.png')
   // When player falls and lands on screen end, adds a bounce
   player.setBounce(0.2);
@@ -76,7 +76,7 @@ function create() {
   this.anims.create({
     key: 'run',
     repeat: -1,
-    // frames: this.anims.generateFrameNames('tom', {start: 1, end: 5}),
+    // frames: this.anims.generateFrameNames('tom', {start: 1, end: 5}), ||OLD CODE||
     frames: this.anims.generateFrameNames('tom', {
       prefix: 'run',
       suffix: '.png',
@@ -91,7 +91,7 @@ function create() {
   this.anims.create({
     key: 'jump',
     repeat: -1,
-    // frames: this.anims.generateFrameNames('tom', {start: 6, end: 8}),
+    // frames: this.anims.generateFrameNames('tom', {start: 6, end: 8}), ||OLD CODE||
     frames: this.anims.generateFrameNames('tom', {
       prefix: 'jump',
       suffix: '.png',
@@ -103,7 +103,7 @@ function create() {
   })
 
   // Call play() passing in the animation key previously created to play the animation
-  // player.play('run');
+  // player.play('run'); ||OLD CODE||
 
   cursors = this.input.keyboard.createCursorKeys();
 }
