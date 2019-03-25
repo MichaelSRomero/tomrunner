@@ -108,7 +108,7 @@ function create() {
       end: 1,
       zeroPad: 3
     }),
-    frameRate: 5
+    frameRate: 1
   })
 
   // Call play() passing in the animation key previously created to play the animation
@@ -123,13 +123,13 @@ function update() {
   // } else {
   //   player.play('run', true)
   // }
-  console.log(`Before Jump: ${player.body.y}`);
-  if (this.game.input.activePointer.isDown && player.body.touching.down && player.body.y < 490) {
+
+  if (this.game.input.activePointer.isDown && player.body.touching.down) {
     player.play('jump')
     player.setVelocityY(-330);
     player.setVelocityX(50);
 
-  } else if (player.body.touching.down || player.body.y > 450) {
+  } else if (player.body.touching.down) {
     player.play('run', true)
   }
 }
