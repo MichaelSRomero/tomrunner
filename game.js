@@ -5,7 +5,8 @@ var config = {
   physics: {
       default: 'arcade',
       arcade: {
-          gravity: { y: 200 }
+          debug: true
+          // gravity: { y: 200 }
       }
   },
   scene: {
@@ -34,7 +35,9 @@ function preload() {
 
 function create() {
 
-  const platforms = this.physics.add.staticGroup();
+  // const platforms = this.physics.add.staticGroup();
+  const platforms = this.physics.add.group();
+
 
   /* Creates a platform at x & y position
   PARAMETERS: (x-position, y-position, key)
@@ -45,6 +48,11 @@ function create() {
   platforms.create(356, 715, 'platform-end')
   platforms.create(900, 715, 'platform')
 
+  let arr = platforms.children.entries;
+  arr.forEach(platform => {
+    platform.enableBody = true;
+    platform.body.immovable = true;
+  })
 
   /* Creates player and enables physics so player will fall
   PARAMETERS: (x-position, y-position, key, frame)
@@ -57,6 +65,7 @@ function create() {
   player = this.physics.add.sprite(100, 350, 'tom', 'run001.png')
   // When player falls and lands on screen end, adds a bounce
   player.setBounce(0.2);
+
   // Prevents the player from falling through the screen
   player.setCollideWorldBounds(true);
 
@@ -90,29 +99,37 @@ function create() {
   // Creates a Jump Animation
   this.anims.create({
     key: 'jump',
-    repeat: -1,
+    repeat: 0,
     // frames: this.anims.generateFrameNames('tom', {start: 6, end: 8}), ||OLD CODE||
     frames: this.anims.generateFrameNames('tom', {
       prefix: 'jump',
       suffix: '.png',
-      start: 1,
-      end: 2,
+      start: 2,
+      end: 1,
       zeroPad: 3
     }),
-    frameRate: 10
+    frameRate: 5
   })
 
   // Call play() passing in the animation key previously created to play the animation
   // player.play('run'); ||OLD CODE||
-
   cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update() {
-  if (cursors.up.isDown && player.body.touching.down) {
+  // if (cursors.up.isDown && player.body.touching.down) {
+  //   player.play('jump')
+  //   player.setVelocityY(-330);
+  // } else {
+  //   player.play('run', true)
+  // }
+  console.log(`Before Jump: ${player.body.y}`);
+  if (this.game.input.activePointer.isDown && player.body.touching.down && player.body.y < 490) {
     player.play('jump')
     player.setVelocityY(-330);
-  } else {
+    player.setVelocityX(50);
+
+  } else if (player.body.touching.down || player.body.y > 450) {
     player.play('run', true)
   }
 }
