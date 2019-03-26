@@ -90,3 +90,20 @@ input:focus{outline: 0;}
   background-color: #262626;
   cursor: pointer;
 }
+
+.leaderboard {
+  position: fixed;
+  top: 0;
+  font-size: 3vw;
+  background-color: black;
+  font-family: 'phosphate';
+  color: #40f2f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 300;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}

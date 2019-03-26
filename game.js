@@ -180,10 +180,8 @@ function startGame(){
       playerLives--
       this.scene.restart();
       newTimer = 0;
-      // console.log(this.time.now);
     } else if (playerLives < 1) {
       alert('GAME OVER')
-      end = (this.time.scene.time.now - start) / 1000;
       this.scene.stop()
     }
 
@@ -222,12 +220,18 @@ document.querySelector('#username').addEventListener('keypress', (e) => {
 
 document.querySelector('.menu').addEventListener('click', (e) => {
   if (e.target.className === 'new-game-button') {
-    e.target.parentElement.style.visibility = 'hidden'
+    e.target.parentElement.style.visibility = 'hidden';
+    leaderBoardUl.style.visibility = 'hidden';
     startGame();
   } else if (e.target.className === 'leaderboard-button') {
     /// change the visibility of the leaderboard div to visible
     leaderBoardUl.style.visibility = 'visible';
     /// fetch request (leaderboard data)
-    leaderboardData.forEach(leader => leaderBoardUl.innerHTML += leaderboardLiTemplate(leader.name, leader.score))
-  }
-})
+    UsersAdapter.loadLeaderBoardData().then(users => {
+      users.forEach(leader => {
+
+        document.querySelector('.menu').style.visibility = 'hidden'
+        leaderBoardUl.innerHTML += (leader.name + leader.games[0].score)
+      })
+  })
+}})
