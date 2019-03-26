@@ -1,3 +1,5 @@
+let mj = new Audio('assets/audio/michael-jackson_07.wav');
+
 var config = {
   type: Phaser.AUTO,
   width: 1350,
@@ -24,7 +26,9 @@ var config = {
 var game = new Phaser.Game(config)
 let player;
 var platforms;
-
+var platforms2;
+var death;
+var gameOver = false;
 function preload() {
   // PARAMETERS: (key, filePath, OPTIONAL -> configObject)
   // width: 85 || height: 100     ||OLD CODE||
@@ -32,6 +36,7 @@ function preload() {
   this.load.atlas('tom', 'assets/player.png', 'assets/player.json')
   this.load.image('platform', 'assets/platform.png')
   this.load.image('platform-end', 'assets/platform-end.png')
+  this.load.image('death', 'assets/death.png')
 }
 
 function create() {
@@ -40,15 +45,30 @@ function create() {
   **  x-position:     the lower, the more to the left; higher is more to the right
   **  y-position:     the lower, the more up it goes; higher moves it down
   */
+  this.add.text(30, 100, 'Tom Runner', { fontFamily: 'phosphate', fontSize: 40, color: '#40f2f5' });
+
   platforms = this.physics.add.group({
           key: 'platform',
-          frameQuantity: 100,
-          setXY: { x: 350, y: 500, stepX: 100},
+          frameQuantity: 30,
+          setXY: { x: 350, y: 600, stepX: 800},
           velocityX: -60,
           immovable: true,
 
       });
-;
+
+    platforms2 = this.physics.add.group({
+            key: 'platform',
+            frameQuantity: 30,
+            setXY: { x: 350, y: 650, stepX: 800},
+            velocityX: -160,
+            immovable: true,
+
+        });
+
+    death = this.physics.add.image(400, 700, 'death');
+
+
+
 
   // platforms.getChildren()[0].setFrictionX(1);
   // platforms.getChildren()[1].setFrictionX(0.5);
@@ -78,7 +98,7 @@ function create() {
   // const player = this.physics.add.sprite(100, 350, 'tom', 0) ||OLD CODE||
   player = this.physics.add.sprite(350, 250, 'tom', 'run001.png')
   // When player falls and lands on screen end, adds a bounce
-  player.setBounce(0.2);
+  player.setBounce(0.1);
 
   // Prevents the player from falling through the screen
   player.setCollideWorldBounds(true)
@@ -88,6 +108,18 @@ function create() {
   player.body.setGravityY(200);
   // Prevents player from passing through a platform
   this.physics.add.collider(player, platforms);
+  this.physics.add.collider(player, platforms2);
+
+
+
+  function gameOver(player, death) {
+    player.setTint(0xff0000);
+    alert('game over!')
+    gameOver = true;
+  }
+
+  this.physics.add.collider(player, death, gameOver, null, this);
+
 
   // let arr = platforms.children.entries;
   // arr.forEach(platform => platform.x += 300)
@@ -140,10 +172,12 @@ function update() {
   // } else {
   //   player.play('run', true)
   // }
-
   if (this.game.input.activePointer.isDown && player.body.touching.down) {
+    /// MJ soundbite ////
+    mj.play();
+    /// MJ soundbite ////
     player.play('jump')
-    player.setVelocityY(-330);
+    player.setVelocityY(-250);
     player.setVelocityX(50);
 
   } else if (player.body.touching.down) {
