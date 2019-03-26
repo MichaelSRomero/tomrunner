@@ -1,47 +1,6 @@
 let mj = new Audio('assets/audio/michael-jackson_07.wav');
 const playerDiv = document.querySelector('#player-bar');
 
-var config = {
-  type: Phaser.AUTO,
-  width: 1350,
-  height: 700,
-  physics: {
-      default: 'arcade',
-      arcade: {
-          debug: true
-          // gravity: { y: 200 }
-      }
-  },
-  scene: {
-      preload: preload,
-      create: create,
-      update: update
-  },
-  transparent: true
-};
-// Initializing the game passing in the configurations
-// var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
-//   preload: preload,
-//   create: create
-// });
-var game = new Phaser.Game(config)
-var player;
-var playerLives = 3;
-var platforms;
-var platforms2;
-var gameOver = false;
-var newTimer = 0;
-
-function preload() {
-  // PARAMETERS: (key, filePath, OPTIONAL -> configObject)
-  // width: 85 || height: 100     ||OLD CODE||
-  // this.load.spritesheet('tom', 'assets/tom-spritesheet.png', {frameWidth: 85, frameHeight: 130}) ||OLD CODE||
-  this.load.atlas('tom', 'assets/player.png', 'assets/player.json')
-  this.load.image('platform', 'assets/platform.png')
-  this.load.image('platform-end', 'assets/platform-end.png')
-  // this.load.image('death', 'assets/death.png')
-}
-
 function startGame(){
     var config = {
     type: Phaser.AUTO,
