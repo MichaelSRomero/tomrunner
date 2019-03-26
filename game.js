@@ -1,4 +1,5 @@
 let mj = new Audio('assets/audio/michael-jackson_07.wav');
+const playerDiv = document.querySelector('#player-bar');
 
 var config = {
   type: Phaser.AUTO,
@@ -24,11 +25,14 @@ var config = {
 //   create: create
 // });
 var game = new Phaser.Game(config)
-let player;
+var player;
+var playerLives = 3;
 var platforms;
 var platforms2;
-var death;
 var gameOver = false;
+var playGameOver;
+var newTimer = 0;
+
 function preload() {
   // PARAMETERS: (key, filePath, OPTIONAL -> configObject)
   // width: 85 || height: 100     ||OLD CODE||
@@ -36,10 +40,11 @@ function preload() {
   this.load.atlas('tom', 'assets/player.png', 'assets/player.json')
   this.load.image('platform', 'assets/platform.png')
   this.load.image('platform-end', 'assets/platform-end.png')
-  this.load.image('death', 'assets/death.png')
+  // this.load.image('death', 'assets/death.png')
 }
 
 function create() {
+  // this.time.scene.time.now = 0;
   /* Creates a platform at x & y position
   PARAMETERS: (x-position, y-position, key)
   **  x-position:     the lower, the more to the left; higher is more to the right
@@ -65,7 +70,7 @@ function create() {
 
         });
 
-    death = this.physics.add.image(400, 700, 'death');
+    // death = this.physics.add.image(400, 700, 'death');
 
 
 
@@ -101,7 +106,7 @@ function create() {
   player.setBounce(0.1);
 
   // Prevents the player from falling through the screen
-  player.setCollideWorldBounds(true)
+  // player.setCollideWorldBounds(true)
 
   // Adds the heaviness to the player, the higher the amount, the more it weighs and falls quicker
   // When physics sprite is created, it is given a body property to set gravity on
@@ -112,13 +117,13 @@ function create() {
 
 
 
-  function gameOver(player, death) {
-    player.setTint(0xff0000);
-    alert('game over!')
-    gameOver = true;
-  }
+  // playGameOver = function(player, death) {
+  //   player.setTint(0xff0000);
+  //   alert('game over!')
+  //   gameOver = true;
+  // }
 
-  this.physics.add.collider(player, death, gameOver, null, this);
+  // this.physics.add.collider(player, death, gameOver, null, this);
 
 
   // let arr = platforms.children.entries;
@@ -164,14 +169,23 @@ function create() {
   // player.play('run'); ||OLD CODE||
   cursors = this.input.keyboard.createCursorKeys();
 }
+setInterval(function(){ newTimer += 1 }, 1000);
 
 function update() {
-  // if (cursors.up.isDown && player.body.touching.down) {
-  //   player.play('jump')
-  //   player.setVelocityY(-330);
-  // } else {
-  //   player.play('run', true)
-  // }
+  playerDiv.querySelector('#time').innerHTML = `${newTimer} second(s)`;
+
+  if (player.body.y > this.game.config.height && playerLives > 0) {
+    playerDiv.querySelector(`#life-${playerLives}`).remove();
+    playerLives--
+    this.scene.restart();
+    newTimer = 0;
+    // console.log(this.time.now);
+  } else if (playerLives < 1) {
+    alert('GAME OVER')
+    end = (this.time.scene.time.now - start) / 1000;
+    this.scene.stop()
+  }
+
   if (this.game.input.activePointer.isDown && player.body.touching.down) {
     /// MJ soundbite ////
     mj.play();
