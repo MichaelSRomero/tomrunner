@@ -3,18 +3,33 @@ body {
   background-image: url("assets/cyberworld.gif");
   max-height: inherit;
   max-width: inherit;
+  font-family: 'phosphate';
+}
+.tom-runner {
+  position: fixed;
+  top: 5px;
+  left: 10px;
+  font-size: 50px;
+  color: #40f2f5;
+}
+#player-name {
+  position: fixed;
+  top: 30px;
+  left: 78%;
+  color: white;
+  font-size: 3vw;
+  z-index: 999;
 }
 
 #player-bar {
   position: fixed;
-  left: 200px;
-  top: 150px;
+  left: 65px;
+  top: 80px;
 }
 
 #time {
  color: white;
  font-size: 3vw;
- font-family: 'phosphate';
 }
 
 img {
@@ -30,7 +45,6 @@ img {
   position: fixed;
   top: 0;
   background-color: black;
-  font-family: 'phosphate';
   color: #40f2f5;
   display: flex;
   flex-direction: column;
@@ -68,7 +82,6 @@ input:focus{outline: 0;}
   top: 0;
   font-size: 3vw;
   background-color: black;
-  font-family: 'phosphate';
   color: #40f2f5;
   display: flex;
   flex-direction: column;

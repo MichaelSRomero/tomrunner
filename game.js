@@ -51,7 +51,6 @@ function startGame(){
     **  x-position:     the lower, the more to the left; higher is more to the right
     **  y-position:     the lower, the more up it goes; higher moves it down
     */
-    this.add.text(30, 100, 'Tom Runner', { fontFamily: 'phosphate', fontSize: 40, color: '#40f2f5' });
 
     platforms = this.physics.add.group({
             key: 'platform',
@@ -213,8 +212,12 @@ const leaderBoardUl = document.querySelector('ul.leaderboard')
 
 
 
-document.querySelector('#username').addEventListener('keypress', (e) => {
+document.querySelector('.login').addEventListener('keydown', (e) => {
   if (e.which === 13) {
+    let username = e.target.value
+    UsersAdapter.createUser(username).then(r => {
+      document.querySelector('#player-name').innerHTML = r.name;
+    });
     e.target.parentElement.style.visibility = 'hidden';
   }
 })
