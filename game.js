@@ -30,7 +30,6 @@ var playerLives = 3;
 var platforms;
 var platforms2;
 var gameOver = false;
-var playGameOver;
 var newTimer = 0;
 
 function preload() {
