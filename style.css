@@ -1,4 +1,5 @@
 body {
+  margin: 0;
   background-image: url("assets/cyberworld.gif");
   max-height: inherit;
   max-width: inherit;
@@ -19,4 +20,73 @@ body {
 img {
   width: 40px;
   height: auto;
+}
+
+/* MENU */
+
+
+
+.login {
+  position: fixed;
+  top: 0;
+  background-color: black;
+  font-family: 'phosphate';
+  color: #40f2f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  height: 100vh;
+  width: 100vw;
+
+}
+
+.login > h1 {
+  font-size: 6vw;
+  font-weight: lighter;
+}
+
+.login > h1:hover {
+  cursor: pointer;
+}
+
+input {
+  border: none;
+  background: none;
+  width: 25vw;
+  color: white;
+  font-size: 3vw;
+  border-bottom: 1px solid white;
+}
+
+input:focus{outline: 0;}
+
+
+.menu {
+  position: fixed;
+  top: 0;
+  font-size: 3vw;
+  background-color: black;
+  font-family: 'phosphate';
+  color: #40f2f5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+  height: 100vh;
+  width: 100vw;
+}
+
+.new-game-button, .leaderboard-button {
+  border-radius: 30px;
+  padding: 3vw;
+  text-align: center;
+  width: 35vw;
+}
+
+.new-game-button:hover, .leaderboard-button:hover {
+  background-color: #262626;
+  cursor: pointer;
 }
