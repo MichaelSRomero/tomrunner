@@ -42,6 +42,7 @@ img {
 
 
 .login {
+  overflow: hidden;
   position: fixed;
   top: 0;
   background-color: black;
@@ -78,6 +79,7 @@ input:focus{outline: 0;}
 
 
 .menu {
+  overflow: hidden;
   position: fixed;
   top: 0;
   font-size: 3vw;

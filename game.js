@@ -33,6 +33,8 @@ function startGame(){
   var gameOver = false;
   var playGameOver;
   var newTimer = 0;
+  var finalScore = [];
+  var currentUserID;
 
   function preload() {
     // PARAMETERS: (key, filePath, OPTIONAL -> configObject)
@@ -178,11 +180,12 @@ function startGame(){
       playerDiv.querySelector(`#life-${playerLives}`).remove();
       playerLives--
       this.scene.restart();
+      finalScore.push(newTimer);
       newTimer = 0;
-      // console.log(this.time.now);
+
     } else if (playerLives < 1) {
+      UsersAdapter.newScore(currentUser, finalScore);
       alert('GAME OVER')
-      end = (this.time.scene.time.now - start) / 1000;
       this.scene.stop()
     }
 
@@ -217,19 +220,24 @@ document.querySelector('.login').addEventListener('keydown', (e) => {
     let username = e.target.value
     UsersAdapter.createUser(username).then(r => {
       document.querySelector('#player-name').innerHTML = r.name;
+      currentUser = r;
     });
-    e.target.parentElement.style.visibility = 'hidden';
+    // e.target.parentElement.style.visibility = 'hidden';
+    e.target.parentElement.style.height = '0';
+    e.target.parentElement.style.transition = '2s';
   }
 })
 
 
 document.querySelector('.menu').addEventListener('click', (e) => {
   if (e.target.className === 'new-game-button') {
-    e.target.parentElement.style.visibility = 'hidden'
+    e.target.parentElement.style.height = '0';
+    e.target.parentElement.style.transition = '2s';
     startGame();
   } else if (e.target.className === 'leaderboard-button') {
     /// change the visibility of the leaderboard div to visible
-    leaderBoardUl.style.visibility = 'visible';
+    e.target.parentElement.style.height = '0';
+    e.target.parentElement.style.transition = '2s';
     /// fetch request (leaderboard data)
     leaderboardData.forEach(leader => leaderBoardUl.innerHTML += leaderboardLiTemplate(leader.name, leader.score))
   }
