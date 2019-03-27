@@ -1,5 +1,6 @@
 let mj = new Audio('assets/audio/michael-jackson_07.wav');
 const playerDiv = document.querySelector('#player-bar');
+const endGameDiv = document.querySelector('div.endgame');
 
 function startGame(){
     var config = {
@@ -28,6 +29,8 @@ function startGame(){
   var game = new Phaser.Game(config)
   var player;
   var playerLives = 3;
+  var playerJumps = 0;
+  var jumps = 2;
   var platforms;
   var platforms2;
   var gameOver = false;
@@ -44,6 +47,8 @@ function startGame(){
     // this.load.image('death', 'assets/death.png')
   }
 
+  ////////////////////////// CREATE ///////////////////////////
+
   function create() {
     // this.time.scene.time.now = 0;
     /* Creates a platform at x & y position
@@ -57,7 +62,7 @@ function startGame(){
             key: 'platform',
             frameQuantity: 30,
             setXY: { x: 350, y: 600, stepX: 800},
-            velocityX: -60,
+            velocityX: -250,
             immovable: true,
 
         });
@@ -66,7 +71,7 @@ function startGame(){
               key: 'platform',
               frameQuantity: 30,
               setXY: { x: 350, y: 650, stepX: 800},
-              velocityX: -160,
+              velocityX: -50,
               immovable: true,
 
           });
@@ -111,7 +116,7 @@ function startGame(){
 
     // Adds the heaviness to the player, the higher the amount, the more it weighs and falls quicker
     // When physics sprite is created, it is given a body property to set gravity on
-    player.body.setGravityY(200);
+    player.body.setGravityY(400);
     // Prevents player from passing through a platform
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(player, platforms2);
@@ -166,13 +171,34 @@ function startGame(){
       frameRate: 1
     })
 
-    // Call play() passing in the animation key previously created to play the animation
-    // player.play('run'); ||OLD CODE||
-    cursors = this.input.keyboard.createCursorKeys();
+    this.input.on('pointerdown', jump)
   }
   setInterval(function(){ newTimer += 1 }, 1000);
 
+  ////////////////////////// JUMP FUNCTIONs ///////////////////////////
+
+  var jump = function() {
+    if (player.body.touching.down || (playerJumps > 0 && playerJumps <= jumps)) {
+
+      if (player.body.touching.down) {
+        playerJumps = 0;
+      }
+      player.setVelocityY(-350);
+      playerJumps ++;
+      player.play('jump')
+      mj.play();
+    }
+  }
+
+  document.addEventListener('click', () => {
+    jump();
+  })
+
+  ////////////////////////// UPDATE ///////////////////////////
+
   function update() {
+    console.log('Jumps left: ' + playerJumps);
+    console.log('Jumps occured: ' + jumps);
     playerDiv.querySelector('#time').innerHTML = `${newTimer} second(s)`;
 
     if (player.body.y > this.game.config.height && playerLives > 0) {
@@ -181,21 +207,20 @@ function startGame(){
       this.scene.restart();
       newTimer = 0;
     } else if (playerLives < 1) {
-      alert('GAME OVER')
       this.scene.stop()
+      this.game.destroy(true)
+      endGameDiv.style.visibility = 'visible';
     }
-
-    if (this.game.input.activePointer.isDown && player.body.touching.down) {
-      /// MJ soundbite ////
-      mj.play();
-      /// MJ soundbite ////
-      player.play('jump')
-      player.setVelocityY(-250);
-      player.setVelocityX(50);
-
-    } else if (player.body.touching.down) {
-      player.play('run', true)
-    }
+    // if (this.game.input.activePointer.isDown && player.body.touching.down) {
+    //   /// MJ soundbite ////
+    //   mj.play();
+    //   /// MJ soundbite ////
+    //   player.play('jump')
+    //   player.setVelocityY(-250);
+    //
+    // } else if (player.body.touching.down) {
+    //   player.play('run', true)
+    // }
   }
 }
 ////////////////////////// MENU ///////////////////////////

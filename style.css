@@ -3,6 +3,7 @@ body {
   background-image: url("assets/cyberworld.gif");
   max-height: inherit;
   max-width: inherit;
+  background-size: cover;
 }
 
 #player-bar {
@@ -63,7 +64,7 @@ input {
 input:focus{outline: 0;}
 
 
-.menu {
+.menu, .endgame {
   position: fixed;
   top: 0;
   font-size: 3vw;
@@ -105,5 +106,10 @@ input:focus{outline: 0;}
   z-index: 300;
   height: 100vh;
   width: 100vw;
-  margin: 0;
+  margin: 0
+}
+
+/* MENU */
+.endgame {
+  visibility: hidden;
 }
