@@ -1,8 +1,14 @@
+////////////////////////// GLOBALS ///////////////////////////
+
 let mj = new Audio('assets/audio/michael-jackson_07.wav');
 const playerDiv = document.querySelector('#player-bar');
 const endGameDiv = document.querySelector('div.endgame');
+const leaderBoardUl = document.querySelector('ol.leaderboard')
+
+////////////////////////// FULL GAME ///////////////////////////
 
 function startGame(){
+  //....... Game Settings .......//
     var config = {
     type: Phaser.AUTO,
     width: 1350,
@@ -10,8 +16,8 @@ function startGame(){
     physics: {
         default: 'arcade',
         arcade: {
+          // remove later
             debug: true
-            // gravity: { y: 200 }
         }
     },
     scene: {
@@ -21,67 +27,45 @@ function startGame(){
     },
     transparent: true
   };
-  // Initializing the game passing in the configurations
-  // var game = new Phaser.Game(800, 600, Phaser.AUTO, '', {
-  //   preload: preload,
-  //   create: create
-  // });
+
+  //....... Game Variables .......//
   var game = new Phaser.Game(config)
   var player;
   var playerLives = 3;
   var playerJumps = 0;
-  var jumps = 2;
-  var platforms;
-  var platforms2;
+  var maxJumps = 2;
+  var topPlatforms;
+  var bottomPlatforms;
   var gameOver = false;
-  var playGameOver;
   var newTimer = 0;
   var finalScore = [];
   var currentUserID;
+  setInterval(function(){ newTimer += 1 }, 1000);
 
+  //....... Preload .......//
   function preload() {
-    // PARAMETERS: (key, filePath, OPTIONAL -> configObject)
-    // width: 85 || height: 100     ||OLD CODE||
-    // this.load.spritesheet('tom', 'assets/tom-spritesheet.png', {frameWidth: 85, frameHeight: 130}) ||OLD CODE||
     this.load.atlas('tom', 'assets/player.png', 'assets/player.json')
     this.load.image('platform', 'assets/platform.png')
     this.load.image('platform-end', 'assets/platform-end.png')
-    // this.load.image('death', 'assets/death.png')
   }
 
-  ////////////////////////// CREATE ///////////////////////////
-
+  //....... Create .......//
   function create() {
-    // this.time.scene.time.now = 0;
-    /* Creates a platform at x & y position
-    PARAMETERS: (x-position, y-position, key)
-    **  x-position:     the lower, the more to the left; higher is more to the right
-    **  y-position:     the lower, the more up it goes; higher moves it down
-    */
-
-    platforms = this.physics.add.group({
+    topPlatforms = this.physics.add.group({
             key: 'platform',
             frameQuantity: 30,
             setXY: { x: 350, y: 600, stepX: 800},
             velocityX: -250,
             immovable: true,
-
         });
 
-      platforms2 = this.physics.add.group({
+    bottomPlatforms = this.physics.add.group({
               key: 'platform',
               frameQuantity: 30,
               setXY: { x: 350, y: 650, stepX: 800},
               velocityX: -50,
               immovable: true,
-
           });
-
-      // death = this.physics.add.image(400, 700, 'death');
-
-
-
-
     // platforms.getChildren()[0].setFrictionX(1);
     // platforms.getChildren()[1].setFrictionX(0.5);
     // platforms.getChildren()[2].setFrictionX(0);
@@ -94,59 +78,22 @@ function startGame(){
     // platforms.children.entries.forEach(platform => platform.setCollideWorldBounds(true) )
     // // platforms.setCollideWorldBounds(true)
 
-    let arr = platforms.children.entries;
-    arr.forEach(platform => {
-      platform.enableBody = true;
-      platform.body.immovable = true;
-    })
-
-    /* Creates player and enables physics so player will fall
-    PARAMETERS: (x-position, y-position, key, frame)
-    **   x-position:    sets x-position on screen (horizontal)
-    **   y-position:    sets y-position on screen (vertical)
-    **   key:           a Key Name on to the sprite being created
-    **   frame:         the beginning of the sprite to display
-    */
-    // const player = this.physics.add.sprite(100, 350, 'tom', 0) ||OLD CODE||
+    // Creates player and enables physics so player will fall
     player = this.physics.add.sprite(350, 250, 'tom', 'run001.png')
     // When player falls and lands on screen end, adds a bounce
     player.setBounce(0.1);
-
-    // Prevents the player from falling through the screen
-    // player.setCollideWorldBounds(true)
 
     // Adds the heaviness to the player, the higher the amount, the more it weighs and falls quicker
     // When physics sprite is created, it is given a body property to set gravity on
     player.body.setGravityY(400);
     // Prevents player from passing through a platform
-    this.physics.add.collider(player, platforms);
-    this.physics.add.collider(player, platforms2);
+    this.physics.add.collider(player, topPlatforms);
+    this.physics.add.collider(player, bottomPlatforms);
 
-
-
-    // playGameOver = function(player, death) {
-    //   player.setTint(0xff0000);
-    //   alert('game over!')
-    //   gameOver = true;
-    // }
-
-    // this.physics.add.collider(player, death, gameOver, null, this);
-
-
-    // let arr = platforms.children.entries;
-    // arr.forEach(platform => platform.x += 300)
-
-    /* Creates animation passing in an Object as an argument
-    **   key:           a Key Name that describes the animation
-    **   repeat:        number of times you want the animation to run (set to -1 for infinite loop)
-    **   frames:        call 'this.anims.generateFrameNames()' & pass in the key of the sprite from preload()
-                        along with an Object indicating the start and end frames
-    **   frameRate:     specifies the speed that the frames should run
-    */
+    // running animation
     this.anims.create({
       key: 'run',
       repeat: -1,
-      // frames: this.anims.generateFrameNames('tom', {start: 1, end: 5}), ||OLD CODE||
       frames: this.anims.generateFrameNames('tom', {
         prefix: 'run',
         suffix: '.png',
@@ -157,11 +104,10 @@ function startGame(){
       frameRate: 10
     });
 
-    // Creates a Jump Animation
+    // jumping animation
     this.anims.create({
       key: 'jump',
       repeat: 0,
-      // frames: this.anims.generateFrameNames('tom', {start: 6, end: 8}), ||OLD CODE||
       frames: this.anims.generateFrameNames('tom', {
         prefix: 'jump',
         suffix: '.png',
@@ -172,104 +118,97 @@ function startGame(){
       frameRate: 1
     })
 
-    this.input.on('pointerdown', jump)
-  }
-  setInterval(function(){ newTimer += 1 }, 1000);
+    // allows player to jump no more than 2 times
+    var jump = function() {
+      if (player.body.touching.down || (playerJumps > 0 && playerJumps <= maxJumps)) {
+        if (player.body.touching.down) {
+          playerJumps = 0;
+        }
 
-  ////////////////////////// JUMP FUNCTIONs ///////////////////////////
-
-  var jump = function() {
-    if (player.body.touching.down || (playerJumps > 0 && playerJumps <= jumps)) {
-
-      if (player.body.touching.down) {
-        playerJumps = 0;
+        player.setVelocityY(-350);
+        playerJumps ++;
+        player.play('jump')
+        mj.play();
       }
-      player.setVelocityY(-350);
-      playerJumps ++;
-      player.play('jump')
-      mj.play();
     }
+    // click listener for jump()
+    document.addEventListener('click', () => {
+      if (!gameOver) {
+        jump();
+      }
+    })
   }
 
-  document.addEventListener('click', () => {
-    jump();
-  })
-
-  ////////////////////////// UPDATE ///////////////////////////
-
+  //....... Update .......//
   function update() {
-    console.log('Jumps left: ' + playerJumps);
-    console.log('Jumps occured: ' + jumps);
+    // updates timer
     playerDiv.querySelector('#time').innerHTML = `${newTimer} second(s)`;
 
+    // TRUE: restarts scene as long as player has lives
+    // FALSE: adds score and persists to database; gameover screen displayed
     if (player.body.y > this.game.config.height && playerLives > 0) {
       playerDiv.querySelector(`#life-${playerLives}`).remove();
       playerLives--
       this.scene.restart();
       finalScore.push(newTimer);
       newTimer = 0;
-
     } else if (playerLives < 1) {
       UsersAdapter.newScore(currentUser, finalScore);
-      alert('GAME OVER')
+
+      gameOver = true;
       this.scene.stop()
       this.game.destroy(true)
       endGameDiv.style.visibility = 'visible';
     }
-    // if (this.game.input.activePointer.isDown && player.body.touching.down) {
-    //   /// MJ soundbite ////
-    //   mj.play();
-    //   /// MJ soundbite ////
-    //   player.play('jump')
-    //   player.setVelocityY(-250);
-    //
-    // } else if (player.body.touching.down) {
-    //   player.play('run', true)
-    // }
+
+    // run animation plays when on ground
+    if (player.body.touching.down) {
+      player.play('run', true)
+    }
   }
+
 }
+
 ////////////////////////// MENU ///////////////////////////
 
-
-
-let leaderboardLiTemplate = (username, score) => `
-<li>${username}: ${score}</li>
-`
-
-
-const leaderBoardUl = document.querySelector('ul.leaderboard')
-
-
-
+//....... Login .......//
 document.querySelector('.login').addEventListener('keydown', (e) => {
   if (e.which === 13) {
     let username = e.target.value
-    UsersAdapter.createUser(username).then(r => {
-      document.querySelector('#player-name').innerHTML = r.name;
-      currentUser = r;
+    // adds users name to top right corner
+    UsersAdapter.createUser(username).then(newUser => {
+      document.querySelector('#player-name').innerHTML = newUser.name;
+      currentUser = newUser;
     });
-    // e.target.parentElement.style.visibility = 'hidden';
+    // hides login screen and transitions to "NewGame|Leaderboard"
     e.target.parentElement.style.height = '0';
     e.target.parentElement.style.transition = '2s';
   }
 })
 
-
+//....... NewGame | Leaderboard .......//
 document.querySelector('.menu').addEventListener('click', (e) => {
+  // TRUE: hides menu screen; begins game
+  // FALSE: leaderboard screen loads up
   if (e.target.className === 'new-game-button') {
     e.target.parentElement.style.height = '0';
     e.target.parentElement.style.transition = '2s';
+    leaderBoardUl.style.visibility = 'hidden';
     startGame();
   } else if (e.target.className === 'leaderboard-button') {
     /// change the visibility of the leaderboard div to visible
     e.target.parentElement.style.height = '0';
     e.target.parentElement.style.transition = '2s';
-    /// fetch request (leaderboard data)
-    UsersAdapter.loadLeaderBoardData().then(users => {
-      users.forEach(leader => {
-
-        document.querySelector('.menu').style.visibility = 'hidden'
-        leaderBoardUl.innerHTML += (leader.name + leader.games[0].score)
-      })
-  })
+    /// load Leaderboard
+    User.all.forEach(user => {
+      leaderBoardUl.innerHTML += `<li>${user.name} ${user.getScores()}</li>`
+    })
 }})
+
+////////////////////////// DOM LOADED ///////////////////////////
+
+document.addEventListener('DOMContentLoaded', () => {
+  UsersAdapter.getAllUsers().then(users => {
+    users.forEach(user => new User(user));
+  })
+})
