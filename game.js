@@ -208,14 +208,10 @@ function startGame(){
       this.scene.restart();
       finalScore.push(newTimer);
       newTimer = 0;
-<<<<<<< HEAD
-    } else if (playerLives < 1) {
-=======
 
     } else if (playerLives < 1) {
       UsersAdapter.newScore(currentUser, finalScore);
       alert('GAME OVER')
->>>>>>> mazen
       this.scene.stop()
       this.game.destroy(true)
       endGameDiv.style.visibility = 'visible';
@@ -261,13 +257,8 @@ document.querySelector('.login').addEventListener('keydown', (e) => {
 
 document.querySelector('.menu').addEventListener('click', (e) => {
   if (e.target.className === 'new-game-button') {
-<<<<<<< HEAD
-    e.target.parentElement.style.visibility = 'hidden';
-    leaderBoardUl.style.visibility = 'hidden';
-=======
     e.target.parentElement.style.height = '0';
     e.target.parentElement.style.transition = '2s';
->>>>>>> mazen
     startGame();
   } else if (e.target.className === 'leaderboard-button') {
     /// change the visibility of the leaderboard div to visible
