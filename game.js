@@ -36,6 +36,7 @@ function startGame(){
   var maxJumps = 2;
   var topPlatforms;
   var bottomPlatforms;
+  var startPlatforms;
   var gameOver = false;
   var newTimer = 0;
   var finalScore = [];
@@ -47,36 +48,61 @@ function startGame(){
     this.load.atlas('tom', 'assets/player.png', 'assets/player.json')
     this.load.image('platform', 'assets/platform.png')
     this.load.image('platform-end', 'assets/platform-end.png')
+    this.load.image('small-platform', 'assets/small-platform.png')
   }
 
   //....... Create .......//
   function create() {
+
+    startPlatforms = this.physics.add.group({
+      key: 'platform-end',
+      frameQuantity: 6,
+      setXY: {x: 0, y: 600, stepX: 260},
+      velocityX: -300,
+      immovable: true
+    });
+
     topPlatforms = this.physics.add.group({
-            key: 'platform',
-            frameQuantity: 30,
-            setXY: { x: 350, y: 600, stepX: 800},
-            velocityX: -250,
+            // key: ['small-platform', "platform"],
+            // frameQuantity: 1,
+            // setXY: { x: Math.round((Math.random() * (3000 - 1700) + 1700) / 10) * 10, y: 600, stepX: 300},
+            // setXY: {x: Math.round((Math.random() * (3000 - 1700) + 1700) / 10) * 10, y: 600},
+            velocityX: -300,
             immovable: true,
+            randomKey: true
         });
 
-    bottomPlatforms = this.physics.add.group({
-              key: 'platform',
-              frameQuantity: 30,
-              setXY: { x: 350, y: 650, stepX: 800},
-              velocityX: -50,
-              immovable: true,
-          });
-    // platforms.getChildren()[0].setFrictionX(1);
-    // platforms.getChildren()[1].setFrictionX(0.5);
-    // platforms.getChildren()[2].setFrictionX(0);
-
-    // platforms = this.physics.add.group();
-    // platforms.create(100, 715, 'platform')
-    // platforms.create(356, 715, 'platform-end')
-    // // platforms.create(900, 715, 'platform')
+    // ------------------ STILL TESTING LV1 PLATFORMS ------------------ //
+    // let prevNum = null;
+    // let randNum;
+    // for (let i = 0; i < 50; i++) {
+    //   if (prevNum !== null) {
+    //     randNum = prevNum;
+    //   } else {
+    //     randNum = Math.round((Math.random() * (2000 - 1700) + 1700) / 10) * 10;
+    //   }
+    //   console.log("randNum: " + randNum);
+    //   console.log("prevNum: " + prevNum);
+    //   topPlatforms.create(randNum, 600, 'small-platform');
+    //   randNum += Math.round((Math.random() * (800 - 400) + 400) / 10) * 10
     //
-    // platforms.children.entries.forEach(platform => platform.setCollideWorldBounds(true) )
-    // // platforms.setCollideWorldBounds(true)
+    //   topPlatforms.create(randNum, 600, 'platform');
+    //   prevNum = randNum + Math.round((Math.random() * (800 - 400) + 400) / 10) * 10;
+    //   console.log("randNum: " + randNum);
+    //   console.log("prevNum: " + prevNum);
+    // }
+    // ------------------ TESTING END ------------------ //
+
+    topPlatforms.create('small-platform');
+    topPlatforms.create('platform');
+
+    bottomPlatforms = this.physics.add.group({
+              key: 'small-platform',
+              frameQuantity: 30,
+              setXY: { x: 1700, y: 600, stepX: 400},
+              velocityX: -300,
+          });
+
 
     // Creates player and enables physics so player will fall
     player = this.physics.add.sprite(350, 250, 'tom', 'run001.png')
@@ -85,10 +111,11 @@ function startGame(){
 
     // Adds the heaviness to the player, the higher the amount, the more it weighs and falls quicker
     // When physics sprite is created, it is given a body property to set gravity on
-    player.body.setGravityY(400);
+    player.body.setGravityY(900);
     // Prevents player from passing through a platform
     this.physics.add.collider(player, topPlatforms);
     this.physics.add.collider(player, bottomPlatforms);
+    this.physics.add.collider(player, startPlatforms);
 
     // running animation
     this.anims.create({
@@ -125,7 +152,7 @@ function startGame(){
           playerJumps = 0;
         }
 
-        player.setVelocityY(-350);
+        player.setVelocityY(-400);
         playerJumps ++;
         player.play('jump')
         mj.play();
@@ -146,7 +173,7 @@ function startGame(){
 
     // TRUE: restarts scene as long as player has lives
     // FALSE: adds score and persists to database; gameover screen displayed
-    if (player.body.y > this.game.config.height && playerLives > 0) {
+    if ((player.body.y > this.game.config.height || player.body.x < 0) && playerLives > 0) {
       playerDiv.querySelector(`#life-${playerLives}`).remove();
       playerLives--
       this.scene.restart();
