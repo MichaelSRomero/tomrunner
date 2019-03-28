@@ -14,8 +14,8 @@ body {
 }
 #player-name {
   position: fixed;
-  top: 30px;
-  left: 78%;
+  top: 1vh;
+  left: 85%;
   color: white;
   font-size: 3vw;
   z-index: 999;
@@ -69,10 +69,11 @@ img {
 input {
   border: none;
   background: none;
-  width: 25vw;
+  width: 30vw;
   color: white;
   font-size: 3vw;
   border-bottom: 1px solid white;
+  font-family: 'phosphate';
 }
 
 input:focus{outline: 0;}
@@ -107,6 +108,7 @@ input:focus{outline: 0;}
 }
 
 .leaderboard {
+  overflow: hidden;
   position: fixed;
   top: 0;
   font-size: 3vw;
@@ -115,7 +117,6 @@ input:focus{outline: 0;}
   color: #40f2f5;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   z-index: 300;
   height: 100vh;
@@ -123,7 +124,38 @@ input:focus{outline: 0;}
   margin: 0
 }
 
+.leaderboard > li {
+  color: white;
+}
+
 /* MENU */
-.endgame {
-  visibility: hidden;
+
+/* ================== Game Over ===================== */
+div.endgame {
+  height: 0%;
+}
+
+div.back {
+  color: white;
+  margin: 1vh auto auto 1vh;
+  font-size: 3vw;
+  cursor: pointer;
+}
+.endgame > p {
+  font-size: 15vh;
+  margin-bottom: 5vh;
+}
+
+.endgame > h1 {
+  cursor: pointer;
+}
+
+.play-again-button{
+  padding: 2vw;
+  color: white;
+  border-radius: 30px;
+}
+.play-again-button:hover {
+  background: #40f2f5;
+  cursor: pointer;
 }

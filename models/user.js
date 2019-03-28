@@ -11,6 +11,9 @@ class User {
     return this.games.map(game => game.score);
   }
 
+  static topScores() {
+  }
+
 }
 
 User.all = [];

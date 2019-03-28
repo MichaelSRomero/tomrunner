@@ -3,7 +3,9 @@
 let mj = new Audio('assets/audio/michael-jackson_07.wav');
 const playerDiv = document.querySelector('#player-bar');
 const endGameDiv = document.querySelector('div.endgame');
-const leaderBoardUl = document.querySelector('ol.leaderboard')
+const leaderBoardUl = document.querySelector('ol.leaderboard');
+const mainMenu = document.querySelector('.menu');
+var playerLives = 3;
 
 ////////////////////////// FULL GAME ///////////////////////////
 
@@ -31,7 +33,6 @@ function startGame(){
   //....... Game Variables .......//
   var game = new Phaser.Game(config)
   var player;
-  var playerLives = 3;
   var playerJumps = 0;
   var maxJumps = 2;
   var topPlatforms;
@@ -181,11 +182,10 @@ function startGame(){
       newTimer = 0;
     } else if (playerLives < 1) {
       UsersAdapter.newScore(currentUser, finalScore);
-
       gameOver = true;
       this.scene.stop()
       this.game.destroy(true)
-      endGameDiv.style.visibility = 'visible';
+      endGameDiv.style.height = '100%';
     }
 
     // run animation plays when on ground
@@ -208,7 +208,7 @@ document.querySelector('.login').addEventListener('keydown', (e) => {
       currentUser = newUser;
     });
     // hides login screen and transitions to "NewGame|Leaderboard"
-    e.target.parentElement.style.height = '0';
+    e.target.parentElement.style.height = '0%';
     e.target.parentElement.style.transition = '2s';
   }
 })
@@ -218,17 +218,19 @@ document.querySelector('.menu').addEventListener('click', (e) => {
   // TRUE: hides menu screen; begins game
   // FALSE: leaderboard screen loads up
   if (e.target.className === 'new-game-button') {
-    e.target.parentElement.style.height = '0';
+    e.target.parentElement.style.height = "0%";
     e.target.parentElement.style.transition = '2s';
-    leaderBoardUl.style.visibility = 'hidden';
+    endGameDiv.style.height = "0%";
+    leaderBoardUl.style.height = "0%";
     startGame();
   } else if (e.target.className === 'leaderboard-button') {
     /// change the visibility of the leaderboard div to visible
-    e.target.parentElement.style.height = '0';
+    e.target.parentElement.style.height = '0%';
     e.target.parentElement.style.transition = '2s';
     /// load Leaderboard
-    User.all.forEach(user => {
-      leaderBoardUl.innerHTML += `<li>${user.name} ${user.getScores()}</li>`
+    UsersAdapter.loadLeaderBoardData().then(leaderboard => {
+      leaderBoardUl.innerHTML = '<div class="back">BACK</div> <h1>Leaderboard</h1>';
+      leaderboard.forEach(leader => leaderBoardUl.innerHTML += `<li>${leader.name}   -   ${leader.score}</li>`)
     })
 }})
 
@@ -238,4 +240,30 @@ document.addEventListener('DOMContentLoaded', () => {
   UsersAdapter.getAllUsers().then(users => {
     users.forEach(user => new User(user));
   })
+})
+
+////////////////////////// back button //////////////////////
+
+leaderBoardUl.addEventListener('click', (e) => {
+  if (e.target.className === "back"){
+    e.target.parentElement.height = "0%";
+    mainMenu.style.height = "100%";
+
+  }
+})
+
+endGameDiv.addEventListener('click', (e) => {
+  if (e.target.className === "back"){
+    endGameDiv.style.height = "0";
+    mainMenu.style.height = "100%";
+  } else if (e.target.className === 'play-again-button') {
+    debugger;
+    playerLives = 3;
+    endGameDiv.style.height = "0%";
+    playerDiv.innerHTML += `
+      <img id="life-1" src="assets/lifecounter.gif">
+      <img id="life-2" src="assets/lifecounter.gif">
+      <img id="life-3" src="assets/lifecounter.gif">`
+    startGame();
+  }
 })

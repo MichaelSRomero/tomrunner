@@ -1,10 +1,10 @@
 class UsersAdapter {
 
   static loadLeaderBoardData() {
-    return fetch('http://localhost:3000/users')
+    return fetch('http://localhost:3000/leaderboard')
       .then(response => response.json())
   }
-  
+
   static getAllUsers() {
     return fetch('http://localhost:3000/users', {
         method: 'GET',
