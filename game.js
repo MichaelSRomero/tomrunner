@@ -35,8 +35,10 @@ function startGame(){
   var player;
   var playerJumps = 0;
   var maxJumps = 2;
-  var topPlatforms;
-  var bottomPlatforms;
+  var playerDash = 0;
+  var maxDash = 1;
+  var immovablePlatforms;
+  var collapsiblePlatforms;
   var startPlatforms;
   var gameOver = false;
   var newTimer = 0;
@@ -50,6 +52,10 @@ function startGame(){
     this.load.image('platform', 'assets/platform.png')
     this.load.image('platform-end', 'assets/platform-end.png')
     this.load.image('small-platform', 'assets/small-platform.png')
+    this.load.image('collapse-platform', 'assets/collapse-platform.png')
+    this.load.image('spike', 'assets/Spike.png')
+    this.load.image('spaceship', 'assets/spaceship.png')
+    this.load.image('barrel', 'assets/barrel.png')
   }
 
   //....... Create .......//
@@ -63,50 +69,72 @@ function startGame(){
       immovable: true
     });
 
-    topPlatforms = this.physics.add.group({
-            // key: ['small-platform', "platform"],
-            // frameQuantity: 1,
-            // setXY: { x: Math.round((Math.random() * (3000 - 1700) + 1700) / 10) * 10, y: 600, stepX: 300},
-            // setXY: {x: Math.round((Math.random() * (3000 - 1700) + 1700) / 10) * 10, y: 600},
+    immovablePlatforms = this.physics.add.group({
             velocityX: -300,
             immovable: true,
             randomKey: true
         });
 
+    collapsiblePlatforms = this.physics.add.group({velocityX: -300});
+
     // ------------------ STILL TESTING LV1 PLATFORMS ------------------ //
-    // let prevNum = null;
-    // let randNum;
-    // for (let i = 0; i < 50; i++) {
-    //   if (prevNum !== null) {
-    //     randNum = prevNum;
-    //   } else {
-    //     randNum = Math.round((Math.random() * (2000 - 1700) + 1700) / 10) * 10;
-    //   }
-    //   console.log("randNum: " + randNum);
-    //   console.log("prevNum: " + prevNum);
-    //   topPlatforms.create(randNum, 600, 'small-platform');
-    //   randNum += Math.round((Math.random() * (800 - 400) + 400) / 10) * 10
-    //
-    //   topPlatforms.create(randNum, 600, 'platform');
-    //   prevNum = randNum + Math.round((Math.random() * (800 - 400) + 400) / 10) * 10;
-    //   console.log("randNum: " + randNum);
-    //   console.log("prevNum: " + prevNum);
-    // }
+    let previousWidth = null;
+    let randomWidth;
+    var platformTypes = [immovablePlatforms, collapsiblePlatforms];
+    var platformKey;
+
+    for (let i = 0; i < 50; i++) {
+      if (previousWidth !== null) {
+        randomWidth = previousWidth;
+      } else {
+        // between 1700 & 2000
+        randomWidth = Math.round((Math.random() * (2000 - 1700) + 1700) / 10) * 10;
+      }
+
+      randomPlatformIndex = Math.round(Math.random() * (platformTypes.length - 1));
+      // between 500 and 600
+      randomHeight = Math.round((Math.random() * (600 - 500) + 500) / 10) * 10;
+
+      if (randomPlatformIndex === 0) {
+        platformKey = 'small-platform';
+      } else {
+        platformKey = 'collapse-platform'
+      }
+
+      platformTypes[randomPlatformIndex].create(randomWidth, randomHeight, platformKey)
+      // adds random distance between 400 & 775 to previousWidth
+      previousWidth = randomWidth + Math.round((Math.random() * (775 - 400) + 400) / 10) * 10;
+    }
     // ------------------ TESTING END ------------------ //
 
-    topPlatforms.create('small-platform');
-    topPlatforms.create('platform');
+    // barrels = this.physics.add.group({
+    //   key: 'barrel',
+    //   setXY: {x:800, y: 0, stepX: 200, stepY: -400},
+    //   velocityX: -300,
+    //   gravityY: 700,
+    //   frameQuantity: 2
+    // })
+    // plat = this.physics.add.sprite(800, 0, 'barrel')
+    // plat.setScale(.5)
+    // plat.setGravityY(700);
+    // plat.setVelocityX(-300)
 
-    bottomPlatforms = this.physics.add.group({
-              key: 'small-platform',
-              frameQuantity: 30,
-              setXY: { x: 1700, y: 600, stepX: 400},
-              velocityX: -300,
-          });
 
+    // spikes on right side of screen
+    spikes = this.add.group({
+      key: 'spike',
+      setXY: {x: 1300, y: 120, stepY: 250},
+      setRotation: {value: 4.7},
+      repeat: 2
+    })
 
     // Creates player and enables physics so player will fall
     player = this.physics.add.sprite(350, 250, 'tom', 'run001.png')
+
+    spaceship = this.physics.add.sprite(1000, -300, 'spaceship');
+    spaceship.setVelocityY(50);
+    spaceship.setVelocityX(-50);
+    spaceship.setFlipX(true);
     // When player falls and lands on screen end, adds a bounce
     player.setBounce(0.1);
 
@@ -114,8 +142,8 @@ function startGame(){
     // When physics sprite is created, it is given a body property to set gravity on
     player.body.setGravityY(900);
     // Prevents player from passing through a platform
-    this.physics.add.collider(player, topPlatforms);
-    this.physics.add.collider(player, bottomPlatforms);
+    this.physics.add.collider(player, immovablePlatforms);
+    this.physics.add.collider(player, collapsiblePlatforms);
     this.physics.add.collider(player, startPlatforms);
 
     // running animation
@@ -160,11 +188,22 @@ function startGame(){
       }
     }
     // click listener for jump()
+    // document.addEventListener('keydown', (e) => {
+    //   if (!gameOver && e.keyCode === 32) {
+    //     jump();
+    //   }
     document.addEventListener('click', () => {
       if (!gameOver) {
         jump();
       }
     })
+
+    // set cursors to 'WASD' keys
+    cursors = this.input.keyboard.addKeys(
+      {up:Phaser.Input.Keyboard.KeyCodes.W,
+      down:Phaser.Input.Keyboard.KeyCodes.S,
+      left:Phaser.Input.Keyboard.KeyCodes.A,
+      right:Phaser.Input.Keyboard.KeyCodes.D});
   }
 
   //....... Update .......//
@@ -174,7 +213,7 @@ function startGame(){
 
     // TRUE: restarts scene as long as player has lives
     // FALSE: adds score and persists to database; gameover screen displayed
-    if ((player.body.y > this.game.config.height || player.body.x < 0) && playerLives > 0) {
+    if (((player.body.y > this.game.config.height || player.body.x < 0) || player.body.x > 1175) && playerLives > 0) {
       playerDiv.querySelector(`#life-${playerLives}`).remove();
       playerLives--
       this.scene.restart();
@@ -191,6 +230,19 @@ function startGame(){
     // run animation plays when on ground
     if (player.body.touching.down) {
       player.play('run', true)
+    }
+
+    // TRUE: player dashes once to right or left when in air
+    // FALSE: resets velocity to 0 to prevent player from moving out of place
+    if ((player.body.touching.none && cursors.left.isDown) && playerDash < maxDash) {
+      player.setVelocityX(-350);
+      playerDash++;
+    } else if ((player.body.touching.none && cursors.right.isDown) && playerDash < maxDash) {
+      player.setVelocityX(100);
+      playerDash++;
+    } else if (player.body.touching.down){
+      player.setVelocityX(0);
+      playerDash = 0;
     }
   }
 
@@ -257,7 +309,6 @@ endGameDiv.addEventListener('click', (e) => {
     endGameDiv.style.height = "0";
     mainMenu.style.height = "100%";
   } else if (e.target.className === 'play-again-button') {
-    debugger;
     playerLives = 3;
     endGameDiv.style.height = "0%";
     playerDiv.innerHTML += `

@@ -126,6 +126,7 @@ input:focus{outline: 0;}
 
 .leaderboard > li {
   color: white;
+  font-size: 2.5vw;
 }
 
 /* MENU */
