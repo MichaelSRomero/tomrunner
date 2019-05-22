@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://github.com/MichaelSRomero/tomrunner"><img src="https://github.com/MichaelSRomero/tomrunner/blob/master/assets/tomrunner-logo.png" alt="Otaku Meets" width="400"></a>
+  <a href="https://github.com/MichaelSRomero/tomrunner"><img src="https://github.com/MichaelSRomero/tomrunner/blob/master/assets/tomrunner-logo.png" alt="Tom the Runner" width="300"></a>
   <br>
 </h1>
 
