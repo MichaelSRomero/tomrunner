@@ -19,7 +19,7 @@ function startGame(){
         default: 'arcade',
         arcade: {
           // remove later
-            debug: true
+            // debug: true
         }
     },
     scene: {
@@ -131,10 +131,10 @@ function startGame(){
     // Creates player and enables physics so player will fall
     player = this.physics.add.sprite(350, 250, 'tom', 'run001.png')
 
-    spaceship = this.physics.add.sprite(1000, -300, 'spaceship');
-    spaceship.setVelocityY(50);
-    spaceship.setVelocityX(-50);
-    spaceship.setFlipX(true);
+    // spaceship = this.physics.add.sprite(1000, -300, 'spaceship');
+    // spaceship.setVelocityY(50);
+    // spaceship.setVelocityX(-50);
+    // spaceship.setFlipX(true);
     // When player falls and lands on screen end, adds a bounce
     player.setBounce(0.1);
 
@@ -188,14 +188,14 @@ function startGame(){
       }
     }
     // click listener for jump()
-    // document.addEventListener('keydown', (e) => {
-    //   if (!gameOver && e.keyCode === 32) {
-    //     jump();
-    //   }
-    document.addEventListener('click', () => {
-      if (!gameOver) {
+    document.addEventListener('keydown', (e) => {
+      if (!gameOver && e.keyCode === 32) {
         jump();
       }
+    // document.addEventListener('click', () => {
+    //   if (!gameOver) {
+    //     jump();
+    //   }
     })
 
     // set cursors to 'WASD' keys
