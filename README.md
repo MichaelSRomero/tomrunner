@@ -1,4 +1,7 @@
-# TOM RUNNER
+<h1 align="center">
+  <a href="https://github.com/MichaelSRomero/tomrunner"><img src="https://github.com/MichaelSRomero/tomrunner/blob/master/assets/tomrunner-logo.png" alt="Otaku Meets" width="400"></a>
+  <br>
+</h1>
 
 One Paragraph of project description goes here
 
