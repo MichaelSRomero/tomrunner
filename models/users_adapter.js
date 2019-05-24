@@ -30,7 +30,7 @@ class UsersAdapter {
 
 
     static newScore(user, score) {
-      return fetch(`${baseURL}/${user.id}`, {
+      return fetch(`${baseURL}/users/${user.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
