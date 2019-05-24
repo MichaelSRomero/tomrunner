@@ -1,12 +1,14 @@
+const baseURL = "https://limitless-reaches-15090.herokuapp.com"
+
 class UsersAdapter {
 
   static loadLeaderBoardData() {
-    return fetch('http://localhost:3000/leaderboard')
+    return fetch(`${baseURL}/leaderboard`)
       .then(response => response.json())
   }
 
   static getAllUsers() {
-    return fetch('http://localhost:3000/users', {
+    return fetch(`${baseURL}/users`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -16,7 +18,7 @@ class UsersAdapter {
   }
 
   static createUser(name) {
-    return fetch('http://localhost:3000/users', {
+    return fetch(`${baseURL}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +30,7 @@ class UsersAdapter {
 
 
     static newScore(user, score) {
-      return fetch(`http://localhost:3000/users/${user.id}`, {
+      return fetch(`${baseURL}/${user.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
