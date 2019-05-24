@@ -4,6 +4,7 @@ let mj = new Audio('assets/audio/michael-jackson_07.wav');
 const playerDiv = document.querySelector('#player-bar');
 const endGameDiv = document.querySelector('div.endgame');
 const leaderBoardUl = document.querySelector('ol.leaderboard');
+const gameControlsDiv = document.querySelector('.game-control-bar');
 const mainMenu = document.querySelector('.menu');
 let screenWidth = window.innerWidth; // 1350
 let screenHeight = window.innerHeight; // 700
@@ -255,11 +256,13 @@ document.querySelector('.menu').addEventListener('click', (e) => {
     e.target.parentElement.style.transition = '2s';
     endGameDiv.style.height = "0%";
     leaderBoardUl.style.height = "0%";
+    gameControlsDiv.style.display = 'none';
     startGame();
   } else if (e.target.className === 'leaderboard-button') {
     /// change the visibility of the leaderboard div to visible
     e.target.parentElement.style.height = '0%';
     e.target.parentElement.style.transition = '2s';
+    gameControlsDiv.style.display = 'none'
     /// load Leaderboard
     UsersAdapter.loadLeaderBoardData().then(leaderboard => {
       leaderBoardUl.innerHTML = '<div class="back">BACK</div> <h1>Leaderboard</h1>';
@@ -281,7 +284,7 @@ leaderBoardUl.addEventListener('click', (e) => {
   if (e.target.className === "back"){
     e.target.parentElement.height = "0%";
     mainMenu.style.height = "100%";
-
+    gameControlsDiv.style.display = 'flex';
   }
 })
 
