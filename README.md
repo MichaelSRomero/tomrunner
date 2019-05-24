@@ -39,7 +39,7 @@ to fire it up
 ## Demo
 
 <h1 align="center">
-  <a href="https://github.com/MichaelSRomero/tomrunner"><img src="https://github.com/MichaelSRomero/tomrunner/blob/master/assets/tomrunner-logo.png" alt="Tom the Runner" width="300"></a>
+  <a href="https://github.com/MichaelSRomero/tomrunner"><img src="https://github.com/MichaelSRomero/tomrunner/blob/master/assets/tom-runner.png" alt="Tom the Runner" width="300"></a>
   <br>
 </h1>
 
