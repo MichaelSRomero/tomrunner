@@ -5,6 +5,8 @@ const playerDiv = document.querySelector('#player-bar');
 const endGameDiv = document.querySelector('div.endgame');
 const leaderBoardUl = document.querySelector('ol.leaderboard');
 const mainMenu = document.querySelector('.menu');
+let screenWidth = window.innerWidth; // 1350
+let screenHeight = window.innerHeight; // 700
 var playerLives = 3;
 
 ////////////////////////// FULL GAME ///////////////////////////
@@ -13,14 +15,10 @@ function startGame(){
   //....... Game Settings .......//
     var config = {
     type: Phaser.AUTO,
-    width: 1350,
-    height: 700,
+    width: screenWidth,
+    height: screenHeight,
     physics: {
-        default: 'arcade',
-        arcade: {
-          // remove later
-            // debug: true
-        }
+        default: 'arcade'
     },
     scene: {
         preload: preload,
@@ -107,23 +105,10 @@ function startGame(){
     }
     // ------------------ TESTING END ------------------ //
 
-    // barrels = this.physics.add.group({
-    //   key: 'barrel',
-    //   setXY: {x:800, y: 0, stepX: 200, stepY: -400},
-    //   velocityX: -300,
-    //   gravityY: 700,
-    //   frameQuantity: 2
-    // })
-    // plat = this.physics.add.sprite(800, 0, 'barrel')
-    // plat.setScale(.5)
-    // plat.setGravityY(700);
-    // plat.setVelocityX(-300)
-
-
     // spikes on right side of screen
     spikes = this.add.group({
       key: 'spike',
-      setXY: {x: 1300, y: 120, stepY: 250},
+      setXY: {x: screenWidth - 50, y: 120, stepY: 250},
       setRotation: {value: 4.7},
       repeat: 2
     })
@@ -131,10 +116,6 @@ function startGame(){
     // Creates player and enables physics so player will fall
     player = this.physics.add.sprite(350, 250, 'tom', 'run001.png')
 
-    // spaceship = this.physics.add.sprite(1000, -300, 'spaceship');
-    // spaceship.setVelocityY(50);
-    // spaceship.setVelocityX(-50);
-    // spaceship.setFlipX(true);
     // When player falls and lands on screen end, adds a bounce
     player.setBounce(0.1);
 
@@ -213,7 +194,7 @@ function startGame(){
 
     // TRUE: restarts scene as long as player has lives
     // FALSE: adds score and persists to database; gameover screen displayed
-    if (((player.body.y > this.game.config.height || player.body.x < 0) || player.body.x > 1175) && playerLives > 0) {
+    if (((player.body.y > this.game.config.height || player.body.x < 0) || player.body.x > screenWidth - 125) && playerLives > 0) {
       playerDiv.querySelector(`#life-${playerLives}`).remove();
       playerLives--
       this.scene.restart();
@@ -311,7 +292,7 @@ endGameDiv.addEventListener('click', (e) => {
   } else if (e.target.className === 'play-again-button') {
     playerLives = 3;
     endGameDiv.style.height = "0%";
-    playerDiv.innerHTML += `
+    playerDiv.querySelector('div.life-container').innerHTML += `
       <img id="life-1" src="assets/lifecounter.gif">
       <img id="life-2" src="assets/lifecounter.gif">
       <img id="life-3" src="assets/lifecounter.gif">`

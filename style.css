@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Cinzel:400,700&display=swap');
+
 body {
   margin: 0;
   background-image: url("assets/cyberworld.gif");
@@ -7,14 +9,14 @@ body {
 }
 .tom-runner {
   position: fixed;
-  top: 5px;
-  left: 10px;
+  top: 15px;
+  left: 32px;
   font-size: 50px;
   color: #40f2f5;
 }
 #player-name {
   position: fixed;
-  top: 1vh;
+  top: 30px;
   left: 85%;
   color: white;
   font-size: 3vw;
@@ -22,14 +24,19 @@ body {
 }
 
 #player-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: fixed;
   left: 65px;
-  top: 80px;
+  top: 68px;
 }
 
 #time {
  color: white;
  font-size: 3vw;
+ font-family: 'Cinzel', serif;
+ font-weight: 700;
 }
 
 img {
@@ -37,9 +44,56 @@ img {
   height: auto;
 }
 
+/* GAME CONTROLS */
+.game-control-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 70%;
+  left: 50%;
+  font-family: 'Cinzel', serif;
+  font-weight: 100;
+  /* border: 1px solid white; */
+  height: 200px;
+  width: 350px;
+  margin-left: -175px;
+  z-index: 99999;
+}
+
+.game-control-bar > h1 {
+  color: white;
+  margin-top: 0;
+}
+
+.control-section {
+  display: flex;
+  flex-direction: row;
+}
+
+.control-section-col {
+  display: flex;
+  align-items: center;
+  margin: 0 6px;
+  padding: 8px 8px;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: rgb(253, 205, 255);
+  width: 33%;
+}
+
+.control-section-col > img {
+  margin-bottom: 12px;
+}
+
+#space-key {
+  height: 20px;
+  width: auto;
+}
+/* GAME CONTROLS */
+
 /* MENU */
-
-
 
 .login {
   overflow: hidden;
@@ -131,6 +185,7 @@ ol.leaderboard {
 
 .leaderboard > li {
   color: white;
+  font-family: 'Cinzel', serif;
   margin-bottom: 10px;
   width: fit-content;
 }
